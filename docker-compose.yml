@@ -1,0 +1,37 @@
+# SQL Formatter 맥미니 상시 운영.
+#
+# badminton-rank / pdfsnap / art-galleries 와 동일하게 공용 Cloudflare Tunnel(edge_shared)에 합류한다.
+# 외부 노출은 컨테이너 포트 발행이 아니라, 공용 cloudflared 가 edge_shared 안에서
+#   sql.myazit.kr → http://sql-formatter-frontend:3700
+# 으로 라우팅한다(Cloudflare Zero Trust 대시보드 Public Hostname 설정).
+#
+# 데이터/백엔드 없음: 포맷팅은 전적으로 브라우저(클라이언트)에서 수행된다(PRD O-01).
+#
+# 사용: cd repo && docker compose up -d --build
+#
+# name: 운영 트리가 .../<도메인>/<서비스>/repo 구조라 디렉토리명이 모두 "repo" 로 같아,
+# 미지정 시 다른 서비스와 compose 프로젝트가 충돌한다. 반드시 고유 이름을 둔다.
+name: sql-formatter
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sql-formatter-frontend:latest
+    container_name: sql-formatter-frontend
+    restart: unless-stopped
+    # - expose: edge_shared 내부망(cloudflared)에서 접근 → 외부 공개 경로
+    # - ports : 맥미니 호스트 로컬 확인용 (http://localhost:3700)
+    expose:
+      - "3700"
+    ports:
+      - "127.0.0.1:3700:3700"
+    networks:
+      - edge_shared
+
+# 공용 cloudflared compose 가 생성/소유하는 외부 네트워크에 합류한다.
+networks:
+  edge_shared:
+    name: edge_shared
+    external: true
