@@ -68,9 +68,9 @@ pnpm + Turborepo 모노레포 / `packages/core`(엔진) + `apps/web`(Next.js App
 - ✅ `/healthz` → ok (컨테이너·호스트), 메인 페이지 HTTP 200
 - ✅ GitHub Public 레포 생성+push: https://github.com/ksheo71/sql-formatter (main)
 - ✅ 배포 트리 클론: `/opt/stack/services/public/myazit.kr/sql-formatter/repo`
-- ⛔ 남은 수동 단계:
-  - **Cloudflare Zero Trust 대시보드** Public Hostname 추가: `sql.myazit.kr` → `http://sql-formatter-frontend:3700` (cloudflared 토큰 모드라 CLI 불가) — 사용자가 직접 진행
-  - (선택) **self-hosted 러너 등록** — push 시 자동배포용. 정책상 자동 설치 차단됨(매 push마다 deploy.sh 자동 실행 권한 별도 필요). 미설치 시에도 `scripts/deploy.sh` 수동 실행으로 배포 가능
+- ✅ **self-hosted 러너 설치**: `kyle-mini-sql` (online), launchd 서비스 `actions.runner.ksheo71-sql-formatter.kyle-mini-sql` — 재부팅 자동 실행
+- ✅ **CI/CD 자동배포 검증 완료**: main push 2건 → 워크플로 `Deploy to sql.myazit.kr` 모두 success (러너가 deploy.sh 자동 실행)
+- ⛔ 남은 단계(사용자 직접): **Cloudflare Zero Trust 대시보드** Public Hostname 추가: `sql.myazit.kr` → `http://sql-formatter-frontend:3700` (cloudflared 토큰 모드라 CLI 불가)
 
 ## 로그
 - 2026-06-09: PRD 분석 완료, [확인필요] 5건 모두 해소, 작업 계획 수립.
